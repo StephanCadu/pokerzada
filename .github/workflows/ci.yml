@@ -20,7 +20,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     env:
-      REGISTRY: ghcr.io
+      REGISTRY: ghcr.io/${{ github.actor | lower }}
       BACKEND_IMAGE: ${{ github.repository }}/pokerzada-backend
       FRONTEND_IMAGE: ${{ github.repository }}/pokerzada-frontend
 
