@@ -1,0 +1,42 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:16
+    container_name: pokerzada-db
+    environment:
+      POSTGRES_DB: pokerzada
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: pokerzada-backend
+    ports:
+      - '8080:8080'
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: pokerzada
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: pokerzada-frontend
+    ports:
+      - '3000:3000'
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
