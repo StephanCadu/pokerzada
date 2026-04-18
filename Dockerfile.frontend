@@ -3,6 +3,8 @@ WORKDIR /app
 COPY frontend/package.json frontend/tsconfig.json frontend/next-env.d.ts frontend/next.config.mjs ./
 COPY frontend/app ./app
 COPY frontend/styles ./styles
+RUN mkdir -p ./public
+COPY frontend/public ./public
 RUN npm install
 RUN npm run build
 
