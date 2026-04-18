@@ -29,6 +29,5 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
-          railway login --apiKey "$RAILWAY_TOKEN"
-          railway up --service pokerzada-backend --yes
+          railway up --service pokerzada-backend --service pokerzada-frontend --yes
           railway up --service pokerzada-frontend --yes
