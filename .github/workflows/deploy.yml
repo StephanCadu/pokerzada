@@ -1,0 +1,45 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  packages: read
+  id-token: write
+
+jobs:
+  deploy:
+    name: Deploy to Railway
+    runs-on: ubuntu-latest
+    env:
+      REGISTRY: ghcr.io
+      BACKEND_IMAGE: ${{ github.repository }}/pokerzada-backend
+      FRONTEND_IMAGE: ${{ github.repository }}/pokerzada-frontend
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy to Railway
+        uses: railwayapp/actions@v1
+        with:
+          railway_token: ${{ secrets.RAILWAY_TOKEN }}
+          service: pokerzada-backend
+          image: $REGISTRY/${BACKEND_IMAGE}:${{ github.sha }}
+
+      - name: Deploy frontend to Railway
+        uses: railwayapp/actions@v1
+        with:
+          railway_token: ${{ secrets.RAILWAY_TOKEN }}
+          service: pokerzada-frontend
+          image: $REGISTRY/${FRONTEND_IMAGE}:${{ github.sha }}
