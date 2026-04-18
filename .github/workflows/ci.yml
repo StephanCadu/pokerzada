@@ -20,7 +20,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     env:
-      REGISTRY: ghcr.io/${{ github.actor | lower }}
+      REGISTRY: ghcr.io
       BACKEND_IMAGE: ${{ github.repository }}/pokerzada-backend
       FRONTEND_IMAGE: ${{ github.repository }}/pokerzada-frontend
 
@@ -75,13 +75,15 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     env:
-      REGISTRY: ghcr.io
       BACKEND_IMAGE: ${{ github.repository }}/pokerzada-backend
       FRONTEND_IMAGE: ${{ github.repository }}/pokerzada-frontend
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+
+      - name: Set registry to lowercase
+        run: echo "REGISTRY=ghcr.io/$(echo ${{ github.actor }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
