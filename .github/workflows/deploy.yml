@@ -1,9 +1,7 @@
 name: Deploy
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -12,9 +10,8 @@ permissions:
 
 jobs:
   deploy:
-    name: Deploy to Railway
+    name: Manual Railway deploy
     runs-on: ubuntu-latest
-    needs: test
 
     steps:
       - name: Check out repository
@@ -31,4 +28,7 @@ jobs:
       - name: Deploy to Railway
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: railway up --service pokerzada-backend --service pokerzada-frontend
+        run: |
+          railway login --apiKey "$RAILWAY_TOKEN"
+          railway up --service pokerzada-backend --yes
+          railway up --service pokerzada-frontend --yes
